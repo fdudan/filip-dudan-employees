@@ -1,0 +1,16 @@
+.authentication-data .row {
+  border-bottom: 1px #ddd solid;
+}
+
+.row.main {
+  font-weight: bold;
+  border-bottom: 2px gray solid;
+}
+
+.row div {
+  padding: 8px;
+}
+
+button.hidden {
+  display: none;
+}
