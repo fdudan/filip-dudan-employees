@@ -19,6 +19,8 @@
   <properties>
     <java.version>11</java.version>
     <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
+    <open-csv.version>4.1</open-csv.version>
+    <apache-commons.version>3.12.0</apache-commons.version>
   </properties>
 
   <modules>
@@ -27,7 +29,13 @@
     <module>employees-service</module>
   </modules>
 
-<dependencies>
+  <dependencies>
+    <!--    SPRING  -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
     <!--		OTHER			-->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -35,4 +43,31 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <!--    PROJECT   -->
+      <dependency>
+        <groupId>com.sirma.task.employees.web</groupId>
+        <artifactId>employees-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sirma.task.employees.service</groupId>
+        <artifactId>employees-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!--    OTHER   -->
+      <dependency>
+        <groupId>com.opencsv</groupId>
+        <artifactId>opencsv</artifactId>
+        <version>${open-csv.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${apache-commons.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

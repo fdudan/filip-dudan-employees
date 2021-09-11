@@ -12,9 +12,7 @@
   <script type="text/javascript" th:src="@{/resources/js/index.js}"></script>
   <title>Employees overview</title>
 </head>
-
 <body>
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-2"></div>
@@ -23,7 +21,40 @@
     </div>
   </div>
 
-
+  <table class="table" th:if="${employees ne null}">
+    <thead class="thead-dark">
+    <td>Employee ID</td>
+    <td>Project Id</td>
+    <td>Date from</td>
+    <td>Date to</td>
+    </thead>
+    <tbody class="table-striped">
+    <tr th:each="employee: ${employees}">
+      <td style="white-space: nowrap;" th:text="${employee.employeeId}"/>
+      <td th:text="${employee.projectId}"/>
+      <td th:text="${employee.getDateFrom()}"/>
+      <td th:text="${employee.getDateTo()}"/>
+    </tr>
+    </tbody>
+  </table>
+  <h1><em>Employee pairs overview</em></h1>
+  <table class="table" th:if="${couples ne null}">
+    <thead class="thead-dark">
+    <td>Project ID</td>
+    <td>Employee 1 </td>
+    <td>Employee 2</td>
+    <td>Days worked together</td>
+    </thead>
+    <tbody class="table-striped">
+    <tr th:each="couple: ${couples}">
+      <td style="white-space: nowrap;" th:text="${couple.getProjectId()}"/>
+      <td style="white-space: nowrap;" th:text="${couple.getFirstEmployee().toString()}"/>
+      <td style="white-space: nowrap;" th:text="${couple.getSecondEmployee().toString()}"/>
+      <td style="white-space: nowrap;" th:text="${couple.getDaysWorkedTogether()}"/>
+    </tr>
+    </tbody>
+  </table>
+  <H3 th:if="${couples eq null}">NO PAIRS FOUND</H3>
 </div>
 </body>
 </html>
