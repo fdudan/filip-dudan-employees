@@ -2,18 +2,15 @@ package com.sirma.task.employees.service;
 
 import com.sirma.task.employees.service.model.EmployeeCouple;
 import com.sirma.task.employees.service.model.EmployeeCsvModel;
+import com.sirma.task.employees.service.repository.CoupleRepository;
+import com.sirma.task.employees.service.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.keyvalue.MultiKey;
+import org.apache.commons.collections.map.MultiKeyMap;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -22,12 +19,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmployeeDataProcessor {
-  private final EmployeeDataParser employeeDataParser;
+  private final EmployeeRepository employeeRepository;
+  private final CoupleRepository coupleRepository;
 
-  public List<EmployeeCouple> getAllCouples() throws ParseException {
-    List<EmployeeCouple> employeeCouples = new LinkedList<>();
-    List<EmployeeCsvModel> employees = employeeDataParser.parseEmployeesFromPath();
-    for (Integer projectId : getProjects()) {
+  /**
+   * Iterates through all employees creating a couple if the the employees worked together on the
+   * same project. Results are grouped by project and saved in the CoupleRepository
+   */
+  public void createCouples(){
+    MultiKeyMap map = new MultiKeyMap();
+    map.put(1, 2, 0);
+
+    List<EmployeeCsvModel> employees = employeeRepository.getAllEmployees();
+    for (Integer projectId : employeeRepository.getAllProjects()) {
       //Find all employees that worked on the same project
       List<EmployeeCsvModel> employeesOnSameProject = employees.stream()
           .filter(e -> e.getProjectId() == projectId)
@@ -37,15 +41,12 @@ public class EmployeeDataProcessor {
       for (int i = 0; i < employeesOnSameProject.size() - 1; i++) {
         for (int j = i + 1; j < employeesOnSameProject.size(); j++) {
           if (checkIfWorkedTogether(employeesOnSameProject.get(i), employeesOnSameProject.get(j)))
-            employeeCouples.add(new EmployeeCouple(projectId,
+            coupleRepository.saveCouple(new EmployeeCouple(projectId,
                 employeesOnSameProject.get(i),
                 employeesOnSameProject.get(j)));
         }
       }
     }
-    //Sort employee couples ascending.
-    employeeCouples.sort((o1, o2) -> o1.getTimeWorkedTogether() <= o2.getTimeWorkedTogether() ? 1 : -1);
-    return employeeCouples;
   }
 
   /**
@@ -69,27 +70,46 @@ public class EmployeeDataProcessor {
     }
     //return true if first employee still worked before second started
     return (firstEmployee.getDateTo().after(secondEmployee.getDateFrom()));
+  }
 
+
+  public Triple<Integer, Integer, Long> getLongestWorkingTogetherCouple() {
+    MultiKeyMap map = mapCouplesAndAccumulateTime();
+    MultiKey keyForMaxCouple = null;
+    long valueForMaxCouple = 0;
+    for(Object key: map.keySet()) {
+      if((long) map.get(key) > valueForMaxCouple){
+        keyForMaxCouple = (MultiKey) key;
+        valueForMaxCouple = (long) map.get(key);
+      }
+    }
+    System.out.println(" key " + keyForMaxCouple + " " + valueForMaxCouple);
+
+    return Triple.of((int)keyForMaxCouple.getKey(0), (int) keyForMaxCouple.getKey(1), valueForMaxCouple);
   }
 
   /**
-   * Extracts the project IDs from the employees list.
-   *
-   * @return {@link List<Integer>} containing all project IDs.
+   * Maps employees that worked together on different projects and accumulates times.
+   * @return {@link MultiKeyMap} of the mapped couples.
    */
-  public List<Integer> getProjects() {
-    return employeeDataParser.parseEmployeesFromPath()
-        .stream()
-        .filter(distinctByKey(EmployeeCsvModel::getProjectId))
-        .map(EmployeeCsvModel::getProjectId)
-        .collect(Collectors.toList());
-  }
-
-  /**
-   * Maps distinct elements.
-   */
-  public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
-    Map<Object, Boolean> map = new ConcurrentHashMap<>();
-    return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+  private MultiKeyMap mapCouplesAndAccumulateTime(){
+    MultiKeyMap map = new MultiKeyMap();
+    for(EmployeeCouple couple: coupleRepository.getAllCouples()) {
+      int key1 = couple.getFirstEmployee().getEmployeeId();
+      int key2 = couple.getSecondEmployee().getEmployeeId();
+      // keys need to be ordered for multimap
+      if(key1 > key2) {
+        int tmp = key2;
+        key2 = key1;
+        key1 = tmp;
+      }
+      //put or accumulate days worked together
+      if(map.containsKey(key1, key2)) {
+        long value = (long) map.get(key1, key2);
+        map.put(key1, key2, value + couple.getDaysWorkedTogether());
+      } else
+        map.put(key1, key2, couple.getDaysWorkedTogether());
+    }
+    return map;
   }
 }

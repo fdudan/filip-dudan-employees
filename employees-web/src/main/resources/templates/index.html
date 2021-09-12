@@ -38,6 +38,9 @@
     </tbody>
   </table>
   <h1><em>Employee pairs overview</em></h1>
+  <H3 th:if="${couples ne null}">The longest working colleagues together on all projects</H3>
+  <p th:text="'Employees with id ' + ${bestColleagues.getLeft() + ' and id ' + bestColleagues.getMiddle()
+  + ' are the best working couple with ' + bestColleagues.getRight() + ' hours worked together!' }"/>
   <table class="table" th:if="${couples ne null}">
     <thead class="thead-dark">
     <td>Project ID</td>
@@ -55,6 +58,22 @@
     </tbody>
   </table>
   <H3 th:if="${couples eq null}">NO PAIRS FOUND</H3>
+</div>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-9">
+    <form method="post" th:action="@{/}" enctype="multipart/form-data">
+      <div class="form-group">
+        Format of the dates: <input type="text" name="format" value="yyyy-MM-dd">
+        <input type="file" name="file" class="form-control-file">
+      </div>
+      <div class="row">
+        <button type="submit" class="btn btn-primary order-0">Upload File</button>
+      </div>
+    </form>
+    <button type="button" onclick="location.href='/deleteAll'" class="btn btn-danger order-0">DELETE OLD FILES</button>
+
+  </div>
 </div>
 </body>
 </html>

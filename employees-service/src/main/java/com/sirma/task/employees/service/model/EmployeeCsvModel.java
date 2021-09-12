@@ -1,14 +1,12 @@
 package com.sirma.task.employees.service.model;
 
 import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvDate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;

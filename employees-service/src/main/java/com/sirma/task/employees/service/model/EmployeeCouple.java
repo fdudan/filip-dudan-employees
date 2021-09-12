@@ -3,8 +3,9 @@ package com.sirma.task.employees.service.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.text.ParseException;
-
+/**
+ * Represents a working couple on a project.
+ */
 @Getter
 @Setter
 public class EmployeeCouple {
@@ -15,7 +16,7 @@ public class EmployeeCouple {
 
   public EmployeeCouple(int projectId,
                         EmployeeCsvModel firstEmployee,
-                        EmployeeCsvModel secondEmployee) throws ParseException {
+                        EmployeeCsvModel secondEmployee){
     this.projectId = projectId;
     this.firstEmployee = firstEmployee;
     this.secondEmployee = secondEmployee;
