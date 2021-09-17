@@ -2,20 +2,23 @@ package com.sirma.task.employees.app.web.controller;
 
 import com.sirma.task.employees.app.service.EmployeeDataParser;
 import com.sirma.task.employees.app.service.EmployeeService;
-import com.sirma.task.employees.app.service.StorageService;
+import com.sirma.task.employees.app.web.model.FileUploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
 public class EmployeeController {
   private final EmployeeService employeeService;
-  private final StorageService storageService;
   private final EmployeeDataParser dataParser;
 
   @GetMapping("/")
@@ -30,15 +33,29 @@ public class EmployeeController {
     return mv;
   }
 
-  @PostMapping("/")
-  public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file,
-                                       @RequestParam("format") String format) {
 
+  @GetMapping("/upload")
+  public ModelAndView handleFileUpload() {
+    ModelAndView mv = new ModelAndView();
+
+    mv.addObject("fileUploadDto", new FileUploadDto());
+    mv.setViewName("upload");
+
+    return mv;
+  }
+  @PostMapping("/upload")
+  public ModelAndView handleFileUpload(@Valid @ModelAttribute("fileUploadDto") FileUploadDto fileUploadDto, BindingResult bindingResult, Model model) {
+    if (bindingResult.hasErrors()) {
+      ModelAndView mv = new ModelAndView();
+      mv.addObject("fileUploadDto", fileUploadDto);
+      mv.addObject("errors", bindingResult.getAllErrors());
+      mv.setViewName("upload");
+      return mv;
+    }
     //Save new pattern
-    dataParser.setParsingPattern(format);
-    storageService.save(file);
+    dataParser.setParsingPattern(fileUploadDto.getPattern());
     //Try to parse new data.
-    dataParser.parseEmployeesFromPath();
+    dataParser.parseEmployeesFromFile(fileUploadDto.getFile());
     return new ModelAndView("redirect:/");
   }
 

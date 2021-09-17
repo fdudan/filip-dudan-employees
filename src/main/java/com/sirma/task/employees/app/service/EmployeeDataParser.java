@@ -7,6 +7,7 @@ import com.sirma.task.employees.app.service.model.EmployeeCsvModel;
 import com.sirma.task.employees.app.service.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.annotation.PostConstruct;
@@ -22,28 +23,18 @@ import java.io.Reader;
 @Service
 @RequiredArgsConstructor
 public class EmployeeDataParser {
-  private final StorageService storageService;
   private final EmployeeDataProcessor employeeDataProcessor;
   private final EmployeeRepository repository;
 
   /**
-   * Called on initialization to parse any data from the filesystem.
-   */
-  @PostConstruct
-  public void onInit() {
-    parseEmployeesFromPath();
-  }
-
-  /**
    * Tries to parse data from the filesystem from the latest upload.
    */
-  public void parseEmployeesFromPath() {
+  public void parseEmployeesFromFile(MultipartFile file) {
     try {
       ColumnPositionMappingStrategy ms = new ColumnPositionMappingStrategy();
       ms.setType(EmployeeCsvModel.class);
 
-      InputStream in = storageService.load();
-      Reader reader = new BufferedReader(new InputStreamReader(in));
+      Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
       CsvToBean cb = new CsvToBeanBuilder(reader)
           .withType(EmployeeCsvModel.class)
           .withMappingStrategy(ms)

@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" th:href="@{/resources/css/index.css}"/>
+  <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}"/>
+  <script type="text/javascript" th:src="@{/resources/js/ext/jquery-1.11.2.min.js}"></script>
+  <script type="text/javascript" th:src="@{/resources/js/ext/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/resources/js/index.js}"></script>
+  <title>Upload form</title>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-9">
+      <form method="post" th:action="@{/upload}" enctype="multipart/form-data" th:object="${fileUploadDto}">
+        <div class="form-group">
+          <p class="alert-danger" th:if="${#fields.hasErrors('pattern')}" th:errors="*{pattern}">Pattern Error</p>
+          Format of the dates: <input type="text" name="format" th:field="*{pattern}">
+
+          <p>Choose a file to be imported into the employees system</p>
+          <p class="alert-danger" th:if="${#fields.hasErrors('fileProvided')}" th:errors="*{fileProvided}">File Error</p>
+          <input type="file" name="file" class="form-control-file" th:field="*{file}">
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-primary order-0">Upload File</button>
+        </div>
+      </form>
+      <button type="button" onclick="location.href='/'" class="btn btn-primary order-0">GO TO OVERVIEW</button>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -80,8 +80,8 @@ public class EmployeeDataProcessor {
         valueForMaxCouple = (long) map.get(key);
       }
     }
-    System.out.println(" key " + keyForMaxCouple + " " + valueForMaxCouple);
-
+    if(keyForMaxCouple == null)
+      return null;
     return Triple.of((int) keyForMaxCouple.getKey(0), (int) keyForMaxCouple.getKey(1), valueForMaxCouple);
   }
 
