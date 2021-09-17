@@ -10,11 +10,10 @@
   </parent>
 
   <groupId>com.sirma.task.employees</groupId>
-  <artifactId>employees</artifactId>
+  <artifactId>employees-application</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>employees</name>
+  <name>employees-application</name>
   <description>Solves Sirma employees task.</description>
-  <packaging>pom</packaging>
 
   <properties>
     <java.version>11</java.version>
@@ -23,17 +22,24 @@
     <apache-commons.version>3.12.0</apache-commons.version>
   </properties>
 
-  <modules>
-    <module>employees-app</module>
-    <module>employees-web</module>
-    <module>employees-service</module>
-  </modules>
-
   <dependencies>
     <!--    SPRING  -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <!--		OTHER			-->
@@ -42,32 +48,38 @@
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
-  </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <!--    PROJECT   -->
-      <dependency>
-        <groupId>com.sirma.task.employees.web</groupId>
-        <artifactId>employees-web</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.sirma.task.employees.service</groupId>
-        <artifactId>employees-service</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
-      <!--    OTHER   -->
-      <dependency>
-        <groupId>com.opencsv</groupId>
-        <artifactId>opencsv</artifactId>
-        <version>${open-csv.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>${apache-commons.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>${open-csv.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${apache-commons.version}</version>
+    </dependency>
+  </dependencies>
+
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+          <configuration>
+            <mainClass>com.sirma.task.employees.app.EmployeesApplication</mainClass>
+            <layout>ZIP</layout>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+                <goal>build-info</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
 </project>

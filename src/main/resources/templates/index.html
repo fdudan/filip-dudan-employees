@@ -1,0 +1,79 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+
+  <link rel="stylesheet" type="text/css" th:href="@{/resources/css/index.css}"/>
+  <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}"/>
+
+  <script type="text/javascript" th:src="@{/resources/js/ext/jquery-1.11.2.min.js}"></script>
+  <script type="text/javascript" th:src="@{/resources/js/ext/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/resources/js/index.js}"></script>
+  <title>Employees overview</title>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-9">
+      <h1><em>Employees overview</em></h1>
+    </div>
+  </div>
+
+  <table class="table" th:if="${employees ne null}">
+    <thead class="thead-dark">
+    <td>Employee ID</td>
+    <td>Project Id</td>
+    <td>Date from</td>
+    <td>Date to</td>
+    </thead>
+    <tbody class="table-striped">
+    <tr th:each="employee: ${employees}">
+      <td style="white-space: nowrap;" th:text="${employee.employeeId}"/>
+      <td th:text="${employee.projectId}"/>
+      <td th:text="${employee.getDateFrom()}"/>
+      <td th:text="${employee.getDateTo()}"/>
+    </tr>
+    </tbody>
+  </table>
+  <h1><em>Employee pairs overview</em></h1>
+  <H3 th:if="${couples ne null}">The longest working colleagues together on all projects</H3>
+  <p th:text="'Employees with id ' + ${bestColleagues.getLeft() + ' and id ' + bestColleagues.getMiddle()
+  + ' are the best working couple with ' + bestColleagues.getRight() + ' hours worked together!' }"/>
+  <table class="table" th:if="${couples ne null}">
+    <thead class="thead-dark">
+    <td>Project ID</td>
+    <td>Employee 1</td>
+    <td>Employee 2</td>
+    <td>Days worked together</td>
+    </thead>
+    <tbody class="table-striped">
+    <tr th:each="couple: ${couples}">
+      <td style="white-space: nowrap;" th:text="${couple.getProjectId()}"/>
+      <td style="white-space: nowrap;" th:text="${couple.getFirstEmployee().toString()}"/>
+      <td style="white-space: nowrap;" th:text="${couple.getSecondEmployee().toString()}"/>
+      <td style="white-space: nowrap;" th:text="${couple.getDaysWorkedTogether()}"/>
+    </tr>
+    </tbody>
+  </table>
+  <H3 th:if="${couples eq null}">NO PAIRS FOUND</H3>
+</div>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-9">
+    <form method="post" th:action="@{/}" enctype="multipart/form-data">
+      <div class="form-group">
+        Format of the dates: <input type="text" name="format" value="yyyy-MM-dd">
+        <input type="file" name="file" class="form-control-file">
+      </div>
+      <div class="row">
+        <button type="submit" class="btn btn-primary order-0">Upload File</button>
+      </div>
+    </form>
+    <button type="button" onclick="location.href='/deleteAll'" class="btn btn-danger order-0">DELETE OLD FILES</button>
+
+  </div>
+</div>
+</body>
+</html>
