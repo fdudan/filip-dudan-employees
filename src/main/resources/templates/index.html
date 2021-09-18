@@ -23,22 +23,7 @@
   <H3 th:if="${bestColleagues ne null}">The longest working colleagues together on all projects</H3>
   <p th:if="${bestColleagues ne null}" th:text="'Employees with id ' + ${bestColleagues.getLeft() + ' and id ' + bestColleagues.getMiddle()
   + ' are the best working couple with ' + bestColleagues.getRight() + ' DAYS worked together!' }"/>
-  <table class="table" th:if="${employees ne null}">
-    <thead class="thead-dark">
-    <td>Employee ID</td>
-    <td>Project Id</td>
-    <td>Date from</td>
-    <td>Date to</td>
-    </thead>
-    <tbody class="table-striped">
-    <tr th:each="employee: ${employees}">
-      <td style="white-space: nowrap;" th:text="${employee.employeeId}"/>
-      <td th:text="${employee.projectId}"/>
-      <td th:text="${employee.getDateFromString()}"/>
-      <td th:text="${employee.getDateToString()}"/>
-    </tr>
-    </tbody>
-  </table>
+  <H3 th:if="${bestColleagues eq null}">NO PAIRS FOUND</H3>
   <h1><em>Employee pairs overview</em></h1>
   <table class="table" th:if="${couples ne null}">
     <thead class="thead-dark">
@@ -56,7 +41,22 @@
     </tr>
     </tbody>
   </table>
-  <H3 th:if="${couples eq null}">NO PAIRS FOUND</H3>
+  <table class="table" th:if="${employees ne null}">
+    <thead class="thead-dark">
+    <td>Employee ID</td>
+    <td>Project Id</td>
+    <td>Date from</td>
+    <td>Date to</td>
+    </thead>
+    <tbody class="table-striped">
+    <tr th:each="employee: ${employees}">
+      <td style="white-space: nowrap;" th:text="${employee.employeeId}"/>
+      <td th:text="${employee.projectId}"/>
+      <td th:text="${employee.getDateFromString()}"/>
+      <td th:text="${employee.getDateToString()}"/>
+    </tr>
+    </tbody>
+  </table>
 </div>
 <div class="row">
   <div class="col-md-2"></div>
