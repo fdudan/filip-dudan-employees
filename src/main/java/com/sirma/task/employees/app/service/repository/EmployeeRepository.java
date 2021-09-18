@@ -1,6 +1,6 @@
 package com.sirma.task.employees.app.service.repository;
 
-import com.sirma.task.employees.app.service.model.EmployeeCsvModel;
+import com.sirma.task.employees.app.service.model.EmployeeModel;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class EmployeeRepository {
-  private List<EmployeeCsvModel> employees = new LinkedList<>();
+  private List<EmployeeModel> employees = new LinkedList<>();
 
-  public void saveAll(List<EmployeeCsvModel> employees) {
+  public void saveAll(List<EmployeeModel> employees) {
     this.employees.addAll(employees);
   }
 
@@ -27,7 +27,7 @@ public class EmployeeRepository {
     this.employees = new LinkedList<>();
   }
 
-  public List<EmployeeCsvModel> getAllEmployees() {
+  public List<EmployeeModel> getAllEmployees() {
     return this.employees;
   }
 
@@ -39,8 +39,8 @@ public class EmployeeRepository {
   public List<Integer> getAllProjects() {
     return this.employees
         .stream()
-        .filter(distinctByKey(EmployeeCsvModel::getProjectId))
-        .map(EmployeeCsvModel::getProjectId)
+        .filter(distinctByKey(EmployeeModel::getProjectId))
+        .map(EmployeeModel::getProjectId)
         .collect(Collectors.toList());
   }
 

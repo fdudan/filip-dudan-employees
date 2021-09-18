@@ -1,7 +1,7 @@
 package com.sirma.task.employees.app.service;
 
 import com.sirma.task.employees.app.service.model.EmployeeCouple;
-import com.sirma.task.employees.app.service.model.EmployeeCsvModel;
+import com.sirma.task.employees.app.service.model.EmployeeModel;
 import com.sirma.task.employees.app.service.repository.CoupleRepository;
 import com.sirma.task.employees.app.service.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class EmployeeService {
   private final EmployeeDataProcessor dataProcessor;
 
 
-  public List<EmployeeCsvModel> getAllEmployees() {
+  public List<EmployeeModel> getAllEmployees() {
     return employeeRepository.getAllEmployees();
   }
 

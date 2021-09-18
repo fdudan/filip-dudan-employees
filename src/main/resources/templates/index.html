@@ -20,7 +20,9 @@
       <h1><em>Employees overview</em></h1>
     </div>
   </div>
-
+  <H3 th:if="${bestColleagues ne null}">The longest working colleagues together on all projects</H3>
+  <p th:if="${bestColleagues ne null}" th:text="'Employees with id ' + ${bestColleagues.getLeft() + ' and id ' + bestColleagues.getMiddle()
+  + ' are the best working couple with ' + bestColleagues.getRight() + ' DAYS worked together!' }"/>
   <table class="table" th:if="${employees ne null}">
     <thead class="thead-dark">
     <td>Employee ID</td>
@@ -32,15 +34,12 @@
     <tr th:each="employee: ${employees}">
       <td style="white-space: nowrap;" th:text="${employee.employeeId}"/>
       <td th:text="${employee.projectId}"/>
-      <td th:text="${employee.getDateFrom()}"/>
-      <td th:text="${employee.getDateTo()}"/>
+      <td th:text="${employee.getDateFromString()}"/>
+      <td th:text="${employee.getDateToString()}"/>
     </tr>
     </tbody>
   </table>
   <h1><em>Employee pairs overview</em></h1>
-  <H3 th:if="${couples ne null}">The longest working colleagues together on all projects</H3>
-  <p th:if="${bestColleagues ne null}" th:text="'Employees with id ' + ${bestColleagues.getLeft() + ' and id ' + bestColleagues.getMiddle()
-  + ' are the best working couple with ' + bestColleagues.getRight() + ' hours worked together!' }"/>
   <table class="table" th:if="${couples ne null}">
     <thead class="thead-dark">
     <td>Project ID</td>

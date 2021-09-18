@@ -10,13 +10,13 @@ import lombok.Setter;
 @Setter
 public class EmployeeCouple {
   private int projectId;
-  private EmployeeCsvModel firstEmployee;
-  private EmployeeCsvModel secondEmployee;
+  private EmployeeModel firstEmployee;
+  private EmployeeModel secondEmployee;
   private long timeWorkedTogether;
 
   public EmployeeCouple(int projectId,
-                        EmployeeCsvModel firstEmployee,
-                        EmployeeCsvModel secondEmployee) {
+                        EmployeeModel firstEmployee,
+                        EmployeeModel secondEmployee) {
     this.projectId = projectId;
     this.firstEmployee = firstEmployee;
     this.secondEmployee = secondEmployee;
@@ -29,6 +29,11 @@ public class EmployeeCouple {
         Math.min(firstEmployee.getDateTo().getTime(),
             secondEmployee.getDateTo().getTime());
     this.timeWorkedTogether = earlierEndTime - laterStartTime;
+
+    //Adds 1 day of working together if they leave/come on the same day
+    //This is needed because the difference between two days is 0 instead of 1.
+    if(timeWorkedTogether == 0)
+      timeWorkedTogether+=86400000;
   }
 
   /**

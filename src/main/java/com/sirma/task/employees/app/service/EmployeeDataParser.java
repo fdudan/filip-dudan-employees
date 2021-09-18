@@ -1,21 +1,17 @@
 package com.sirma.task.employees.app.service;
 
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.sirma.task.employees.app.service.model.EmployeeCsvModel;
+import com.sirma.task.employees.app.service.model.EmployeeModel;
 import com.sirma.task.employees.app.service.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Service for parsing the employee data from CSV file.
@@ -31,17 +27,22 @@ public class EmployeeDataParser {
    */
   public void parseEmployeesFromFile(MultipartFile file) {
     try {
-      ColumnPositionMappingStrategy ms = new ColumnPositionMappingStrategy();
-      ms.setType(EmployeeCsvModel.class);
+      List<EmployeeModel> employees = new LinkedList<>();
 
-      Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-      CsvToBean cb = new CsvToBeanBuilder(reader)
-          .withType(EmployeeCsvModel.class)
-          .withMappingStrategy(ms)
-          .build();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        String[] attributes = line.split(", ");
+
+        employees.add(new EmployeeModel(
+            Integer.parseInt(attributes[0]),
+            Integer.parseInt(attributes[1]),
+            attributes[2],
+            attributes[3]));
+      }
 
       //Save all imported employees
-      repository.saveAll(cb.parse());
+      repository.saveAll(employees);
       //Generate couples
       employeeDataProcessor.createCouples();
 
@@ -52,6 +53,6 @@ public class EmployeeDataParser {
   }
 
   public void setParsingPattern(String parsingPattern) {
-    EmployeeCsvModel.datePattern = parsingPattern;
+    EmployeeModel.datePattern = parsingPattern;
   }
 }

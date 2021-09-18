@@ -1,7 +1,7 @@
 package com.sirma.task.employees.app.service;
 
 import com.sirma.task.employees.app.service.model.EmployeeCouple;
-import com.sirma.task.employees.app.service.model.EmployeeCsvModel;
+import com.sirma.task.employees.app.service.model.EmployeeModel;
 import com.sirma.task.employees.app.service.repository.CoupleRepository;
 import com.sirma.task.employees.app.service.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +27,10 @@ public class EmployeeDataProcessor {
    * same project. Results are grouped by project and saved in the CoupleRepository
    */
   public void createCouples() {
-    List<EmployeeCsvModel> employees = employeeRepository.getAllEmployees();
+    List<EmployeeModel> employees = employeeRepository.getAllEmployees();
     for (Integer projectId : employeeRepository.getAllProjects()) {
       //Find all employees that worked on the same project
-      List<EmployeeCsvModel> employeesOnSameProject = employees.stream()
+      List<EmployeeModel> employeesOnSameProject = employees.stream()
           .filter(e -> e.getProjectId() == projectId)
           .collect(Collectors.toList());
 
@@ -49,13 +49,16 @@ public class EmployeeDataProcessor {
   /**
    * Checks if employees worked together.
    *
-   * @param employee1 {@link EmployeeCsvModel} an employee to compare
-   * @param employee2 {@link EmployeeCsvModel} an employee to compare
+   * @param employee1 {@link EmployeeModel} an employee to compare
+   * @param employee2 {@link EmployeeModel} an employee to compare
    * @return true if employees worked together, else false.
    */
-  private boolean checkIfWorkedTogether(EmployeeCsvModel employee1, EmployeeCsvModel employee2) {
+  private boolean checkIfWorkedTogether(EmployeeModel employee1, EmployeeModel employee2) {
+    //Do not check if a person worked with himself.
+    if(employee1.getEmployeeId() == employee2.getEmployeeId())
+      return false;
 
-    EmployeeCsvModel firstEmployee, secondEmployee;
+    EmployeeModel firstEmployee, secondEmployee;
     //Sort employees by their start date.
     if (employee1.getDateFrom().before(employee2.getDateFrom()) ||
         employee1.getDateFrom().equals(employee2.getDateFrom())) {
@@ -66,7 +69,8 @@ public class EmployeeDataProcessor {
       secondEmployee = employee1;
     }
     //return true if first employee still worked before second started
-    return (firstEmployee.getDateTo().after(secondEmployee.getDateFrom()));
+    return (firstEmployee.getDateTo().after(secondEmployee.getDateFrom()) ||
+        firstEmployee.getDateTo().equals(secondEmployee.getDateFrom()));
   }
 
 
