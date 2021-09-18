@@ -33,7 +33,9 @@ public class EmployeeDataParser {
       String line;
       while ((line = reader.readLine()) != null) {
         String[] attributes = line.split(", ");
-
+        //If the length is not 4 the file is not formatted correctly.
+        if(attributes.length != 4)
+          throw new IllegalArgumentException("Invalid file uploaded. The file should be in format EmpID, ProjectID, DateFrom, DateTo");
         employees.add(new EmployeeModel(
             Integer.parseInt(attributes[0]),
             Integer.parseInt(attributes[1]),

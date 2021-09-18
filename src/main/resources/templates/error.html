@@ -1,0 +1,41 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <meta id="context" th:value="@{/}"/>
+
+  <link rel="stylesheet" type="text/css" th:href="@{/resources/css/index.css}"/>
+  <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}"/>
+
+  <script type="text/javascript" th:src="@{/resources/js/ext/jquery-1.11.2.min.js}"></script>
+  <script type="text/javascript" th:src="@{/resources/js/ext/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/resources/js/index.js}"></script>
+  <title>Card resolver</title>
+</head>
+
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-1 simulator-logo"></div>
+    <div class="col-md-9">
+      <h1><em>Error occurred</em></h1>
+
+      <div>
+        <h4 th:text="${'Error happened at ' + url}"></h4>
+        <!--/*@thymesVar id="exception" type="java.lang.Exception"*/-->
+        <h4 th:text="${exception.getMessage()}"></h4>
+
+      </div>
+    </div>
+  </div>
+  <button type="button" onclick="location.href='/'" class="btn btn-primary order-0">GO TO OVERVIEW</button>
+  <button type="button" onclick="location.href='/upload'" class="btn btn-primary order-0">GO TO UPLOAD</button>
+
+
+
+
+</div>
+</body>
+</html>

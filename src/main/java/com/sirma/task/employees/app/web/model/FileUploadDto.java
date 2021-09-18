@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 /**
  * Model to bind and validate file upload
@@ -22,7 +21,6 @@ public class FileUploadDto {
   private MultipartFile file;
 
   @NotBlank(message = "Date patterns is required. E.g. dd-MM-yyyy ")
-  @Pattern(regexp = "[dmMy\\W]{4,10}", message = "Pattern must be a valid date")
   private String pattern = "yyyy-MM-dd";
 
   /**
