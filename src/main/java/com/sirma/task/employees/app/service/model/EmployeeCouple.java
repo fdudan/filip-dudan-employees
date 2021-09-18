@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeCouple {
+  private final int DAY = 86400000;
   private int projectId;
   private EmployeeModel firstEmployee;
   private EmployeeModel secondEmployee;
@@ -31,9 +32,13 @@ public class EmployeeCouple {
     this.timeWorkedTogether = earlierEndTime - laterStartTime;
 
     //Adds 1 day of working together if they leave/come on the same day
-    //This is needed because the difference between two days is 0 instead of 1.
-    if(timeWorkedTogether == 0)
-      timeWorkedTogether+=86400000;
+    //This is needed because the difference between two same days is 0 instead of 1.
+    if(firstEmployee.getDateTo().equals(secondEmployee.getDateFrom())
+    || secondEmployee.getDateTo().equals(firstEmployee.getDateFrom()))
+      timeWorkedTogether+=DAY;
+    if(firstEmployee.getDateTo().equals(secondEmployee.getDateTo())
+    || secondEmployee.getDateTo().equals(firstEmployee.getDateTo()))
+      timeWorkedTogether+=DAY;
   }
 
   /**

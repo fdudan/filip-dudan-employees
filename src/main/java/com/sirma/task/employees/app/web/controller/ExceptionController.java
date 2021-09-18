@@ -24,6 +24,8 @@ public class ExceptionController {
   @ExceptionHandler(value = Exception.class)
   public ModelAndView
   defaultErrorHandler(HttpServletRequest req, Exception e)  {
+    //ToDo: replace this with proper logging.
+    e.printStackTrace();
     // Send the user to a default error-view.
     ModelAndView mav = new ModelAndView();
     mav.addObject("exception", e);

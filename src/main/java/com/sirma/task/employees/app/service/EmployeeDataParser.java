@@ -35,7 +35,9 @@ public class EmployeeDataParser {
         String[] attributes = line.split(", ");
         //If the length is not 4 the file is not formatted correctly.
         if(attributes.length != 4)
-          throw new IllegalArgumentException("Invalid file uploaded. The file should be in format EmpID, ProjectID, DateFrom, DateTo");
+          throw new IllegalArgumentException("Invalid file uploaded. " +
+              "The file should be in format EmpID, ProjectID, DateFrom, DateTo. " +
+              "No trailing spaces/lines are allowed!!");
         employees.add(new EmployeeModel(
             Integer.parseInt(attributes[0]),
             Integer.parseInt(attributes[1]),
